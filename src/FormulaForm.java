@@ -1,9 +1,8 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 /**
  * Created by aldartron on 21.11.16.
@@ -14,25 +13,24 @@ public class FormulaForm extends JFrame {
     JTextField formulaField = new JTextField();
     JPanel varPanel = new JPanel();
     JPanel generalButtonsPanel = new JPanel();
-    JButton acceptButton = new JButton("Принять");
-    JButton cancelButton = new JButton("Отмена");
+    JButton closeButton = new JButton("Закрыть");
     JPanel listVarPanel = new JPanel();
     JPanel rangeVarPanel = new JPanel();
     JPanel mainPanel = new JPanel();
     JTextField timesField = new JTextField();
-    JButton generateButton = new JButton("Сгенерировать");
+    JButton genButton = new JButton("Сгенерировать");
 
     // Компоненты listVarPanel
     JTextField listVarField = new JTextField();
     JList listVarList = new JList();
     JButton listVarInsertButton = new JButton("Внести");
     JButton listVarAddButton = new JButton("Добавить список");
+    DefaultListModel<String> listModel;
 
     // Компоненты rangeVarPanel
     JTextField rangeVarStart = new JTextField("От");
     JTextField rangeVarEnd = new JTextField("До");
     JTextField rangeVarStep = new JTextField("Шаг");
-    JTextField rangeVarAccuracy = new JTextField("Точность");
     JButton rangeVarAddButton = new JButton("Добавить интервал");
 
     FormulaForm() {
@@ -41,18 +39,16 @@ public class FormulaForm extends JFrame {
         this.add(formulaField,c);
         c.gridy = 1; c.weighty = 7;
         this.add(varPanel,c);
-        c.gridy = 2; c.weighty = 1; c.insets = new Insets(10,25,10,25);
+        c.gridy = 2; c.weighty = 1; c.insets = new Insets(10,10,10,10);
         this.add(mainPanel,c);
         c.gridy = 3; c.insets = new Insets(3,3,3,3);
         this.add(generalButtonsPanel,c);
 
         generalButtonsPanel.setLayout(new GridBagLayout());
         c.gridx = 0;
-        generalButtonsPanel.add(generateButton,c);
+        generalButtonsPanel.add(genButton,c);
         c.gridx = 1;
-        generalButtonsPanel.add(acceptButton,c);
-        c.gridx = 2;
-        generalButtonsPanel.add(cancelButton,c);
+        generalButtonsPanel.add(closeButton,c);
 
         varPanel.setLayout(new GridLayout(1,2));
         varPanel.add(listVarPanel);
@@ -66,9 +62,13 @@ public class FormulaForm extends JFrame {
         c.gridx = 1; c.weightx = 1;
         listVarPanel.add(listVarInsertButton,c);
         c.gridx = 0; c.gridy = 0; c.gridwidth = 2; c.weighty = 7;
-        listVarPanel.add(listVarList,c);
+        listVarPanel.add(new JScrollPane(listVarList),c);
         c.gridy = 2; c.weighty = 1;
         listVarPanel.add(listVarAddButton,c);
+
+        // Настройка листа
+        listModel = new DefaultListModel();
+        listVarList.setModel(listModel);
 
         // Заполнение rangeVarPanel
         rangeVarPanel.setLayout(new GridBagLayout());
@@ -79,8 +79,6 @@ public class FormulaForm extends JFrame {
         c.gridy = 2;
         rangeVarPanel.add(rangeVarStep,c);
         c.gridy = 3;
-        rangeVarPanel.add(rangeVarAccuracy,c);
-        c.gridy = 4;
         rangeVarPanel.add(rangeVarAddButton,c);
 
         // Назначение слушателей полей rangeVarPanel
@@ -88,18 +86,26 @@ public class FormulaForm extends JFrame {
         rangeVarStart.addFocusListener(fcl);
         rangeVarEnd.addFocusListener(fcl);
         rangeVarStep.addFocusListener(fcl);
-        rangeVarAccuracy.addFocusListener(fcl);
 
         mainPanel.setLayout(new GridLayout(1,2));
-        JLabel timesLabel = new JLabel("Количество итераций: ");
+        JLabel timesLabel = new JLabel("Итераций: ");
         timesLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainPanel.add(timesLabel);
         c.gridx = 1;
         mainPanel.add(timesField);
 
-        this.setSize(420,360);
+        this.setSize(360,320);
+        this.setMinimumSize(new Dimension(270,240));
         this.setTitle("Редактор формулы");
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
+
+        // Назначение слушателей
+        genButton.addActionListener(new GenButtonListener());
+        listVarAddButton.addActionListener(new AddListVarListener());
+        rangeVarAddButton.addActionListener(new AddRangeVarListener());
+        listVarInsertButton.addActionListener(new InsertListVarListener());
+        listVarList.addKeyListener(new DeleteListVarListener());
+        closeButton.addActionListener(new CloseListener());
     }
 
     class FieldClickListener implements FocusListener {
@@ -114,6 +120,86 @@ public class FormulaForm extends JFrame {
         public void focusLost(FocusEvent focusEvent) {
 
         }
+    }
+
+    class GenButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            app.showGenForm(formulaField.getText());
+        }
+    }
+
+    class AddListVarListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            ListVar listVar = new ListVar();
+            for (int i = 0; i < listModel.getSize(); i++) {
+                listVar.values.add(listModel.get(i));
+            }
+            app.newListVar(listVar);
+            String space = (ListVar.count < 10) ? "0" : "";
+            formulaField.setText(formulaField.getText() + "[" + space + (ListVar.count-1) + "]");
+            listModel.clear();
+        }
+    }
+
+    class AddRangeVarListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            RangeVar rangeVar = new RangeVar(
+                    Double.parseDouble(rangeVarStart.getText()),
+                    Double.parseDouble(rangeVarEnd.getText()),
+                    Double.parseDouble(rangeVarStep.getText())
+            );
+
+            app.newRangeVar(rangeVar);
+            String space = (RangeVar.count < 10) ? "0" : "";
+            formulaField.setText(formulaField.getText() + "{" + space + (RangeVar.count-1) + "}");
+            // Очищаем поля rangeVar
+            rangeVarStart.setText("");
+            rangeVarEnd.setText("");
+            rangeVarStep.setText("");
+        }
+    }
+
+    class InsertListVarListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (!listVarField.getText().equals("")) {
+                listModel.addElement(listVarField.getText());
+                listVarField.setText("");
+                listVarField.grabFocus();
+            }
+        }
+    }
+
+    class DeleteListVarListener implements KeyListener {
+        @Override
+        public void keyPressed(KeyEvent keyEvent) {
+            if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE)
+                listModel.remove(listVarList.getSelectedIndex());
+        }
+
+        @Override
+        public void keyTyped(KeyEvent keyEvent) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent keyEvent) {
+
+        }
+    }
+
+    class CloseListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            closeForm();
+        }
+    }
+
+    void closeForm() {
+        this.setVisible(false);
     }
 
 }

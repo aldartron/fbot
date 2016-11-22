@@ -1,4 +1,7 @@
 import javax.swing.*;
+import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.OceanTheme;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +24,8 @@ public class MainForm extends JFrame {
     JPanel formulaPanel = new JPanel();
 
     MainForm() {
+        initLaF();
+
         GridBagConstraints c = new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(3,3,3,3),0,0);
         this.setLayout(new GridBagLayout());
         this.add(buttonPanel,c);
@@ -101,4 +106,17 @@ public class MainForm extends JFrame {
             app.showFormulaForm();
         }
     }
+
+    void initLaF() {
+        try {
+            String systemLookAndFeelClassName = UIManager.getSystemLookAndFeelClassName();
+            // устанавливаем LookAndFeel
+            UIManager.setLookAndFeel(systemLookAndFeelClassName);
+        } catch (UnsupportedLookAndFeelException e) {
+            System.err.println("Can't use the specified look and feel on this platform.");
+        } catch (Exception e) {
+            System.err.println("Couldn't get specified look and feel, for some reason.");
+        }
+    }
+
 }
