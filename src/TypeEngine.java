@@ -38,7 +38,7 @@ public class TypeEngine {
         for (String s : list) {
             // Вводим одну формулу
             fEnter(s);
-            robot.delay(1000);
+            robot.delay(3000);
             // Ждем когда вернется цвет
             while (true) {
                 if (robot.getPixelColor(inputX,inputY).equals(color)) {
