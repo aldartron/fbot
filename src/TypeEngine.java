@@ -118,6 +118,16 @@ public class TypeEngine {
                 robot.keyPress('-');
                 robot.keyRelease('-');
             robot.keyRelease(KeyEvent.VK_SHIFT);
+        } else if (c == '(') {
+            robot.keyPress(KeyEvent.VK_SHIFT);
+            robot.keyPress('9');
+            robot.keyRelease('9');
+            robot.keyRelease(KeyEvent.VK_SHIFT);
+        } else if (c == ')') {
+            robot.keyPress(KeyEvent.VK_SHIFT);
+            robot.keyPress('0');
+            robot.keyRelease('0');
+            robot.keyRelease(KeyEvent.VK_SHIFT);
         } else {
             robot.keyPress(c);
             robot.keyRelease(c);
