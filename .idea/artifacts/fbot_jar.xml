@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="fbot:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/fbot_jar</output-path>
+    <root id="archive" name="fbot.jar">
+      <element id="module-output" name="fbot" />
+    </root>
+  </artifact>
+</component>
