@@ -33,18 +33,19 @@ public class TypeEngine {
 
     void start() {
         // Запоминаем цвет
-        color = robot.getPixelColor(inputX,inputY);
+        color = robot.getPixelColor(submitX,submitY);
 
         for (String s : list) {
             // Вводим одну формулу
             fEnter(s);
-            robot.delay(3000);
-            // Ждем когда вернется цвет
+            robot.delay(7000);
+            // Ждем когда вернется цвет кнопки
             while (true) {
-                if (robot.getPixelColor(inputX,inputY).equals(color)) {
+                robot.mouseMove(submitX + (int)(Math.random() * 3), submitY);
+                if (robot.getPixelColor(submitX,submitY).equals(color)) {
                     break;
                 } else {
-                    sleep(250);
+                    sleep(500);
                 }
             }
         }
@@ -67,7 +68,9 @@ public class TypeEngine {
     void fEnter(String formula) {
         // Вводит текст в форму и нажимает кнопку отправки
         // Наводим на форму ввода
-        robot.mouseMove(inputX,inputX);
+        robot.mouseMove(inputX,inputY);
+        robot.delay(1000);
+        sleep(500);
         // Тройной клик для полного выделения
         click(3);
         sleep(300);
@@ -78,8 +81,13 @@ public class TypeEngine {
         // Набираем формулу
         fType(formula);
         sleep(200);
-        // Наводим на кнопку отправки
+        // Кликаем в свободное пространство
+        robot.mouseMove(inputX,inputY + 250);
+        click(1);
+        sleep(100);
+        // Кликаем на кнопку
         robot.mouseMove(submitX,submitY);
+        robot.delay(3000);
         sleep(500);
         click(1);
     }
@@ -87,7 +95,7 @@ public class TypeEngine {
     void fType(String text) {
         for (char c : text.toUpperCase().toCharArray()) {
             press(c);
-            sleep(30);
+            sleep(300);
         }
     }
 
