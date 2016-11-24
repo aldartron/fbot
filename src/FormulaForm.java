@@ -39,7 +39,7 @@ public class FormulaForm extends JFrame {
         this.add(formulaField,c);
         c.gridy = 1; c.weighty = 7;
         this.add(varPanel,c);
-        c.gridy = 2; c.weighty = 1; c.insets = new Insets(10,10,10,10);
+        c.gridy = 2; c.weighty = 1; c.insets = new Insets(3,10,0,10);
         this.add(mainPanel,c);
         c.gridy = 3; c.insets = new Insets(3,3,3,3);
         this.add(generalButtonsPanel,c);
@@ -94,7 +94,8 @@ public class FormulaForm extends JFrame {
         c.gridx = 1;
         mainPanel.add(timesField);
 
-        this.setSize(360,320);
+        this.setLocation(600,300);
+        this.setSize(360,360);
         this.setMinimumSize(new Dimension(270,240));
         this.setTitle("Редактор формулы");
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -132,33 +133,37 @@ public class FormulaForm extends JFrame {
     class AddListVarListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            ListVar listVar = new ListVar();
-            for (int i = 0; i < listModel.getSize(); i++) {
-                listVar.values.add(listModel.get(i));
+            if (checkAddedListVar()) {
+                ListVar listVar = new ListVar();
+                for (int i = 0; i < listModel.getSize(); i++) {
+                    listVar.values.add(listModel.get(i));
+                }
+                app.newListVar(listVar);
+                String space = (ListVar.count < 10) ? "0" : "";
+                formulaField.setText(formulaField.getText() + "[" + space + (ListVar.count - 1) + "]");
+                listModel.clear();
             }
-            app.newListVar(listVar);
-            String space = (ListVar.count < 10) ? "0" : "";
-            formulaField.setText(formulaField.getText() + "[" + space + (ListVar.count-1) + "]");
-            listModel.clear();
         }
     }
 
     class AddRangeVarListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            RangeVar rangeVar = new RangeVar(
-                    Double.parseDouble(rangeVarStart.getText()),
-                    Double.parseDouble(rangeVarEnd.getText()),
-                    Double.parseDouble(rangeVarStep.getText())
-            );
+            if (checkAddedRangeVar()) {
+                RangeVar rangeVar = new RangeVar(
+                        Double.parseDouble(rangeVarStart.getText()),
+                        Double.parseDouble(rangeVarEnd.getText()),
+                        Double.parseDouble(rangeVarStep.getText())
+                );
 
-            app.newRangeVar(rangeVar);
-            String space = (RangeVar.count < 10) ? "0" : "";
-            formulaField.setText(formulaField.getText() + "{" + space + (RangeVar.count-1) + "}");
-            // Очищаем поля rangeVar
-            rangeVarStart.setText("");
-            rangeVarEnd.setText("");
-            rangeVarStep.setText("");
+                app.newRangeVar(rangeVar);
+                String space = (RangeVar.count < 10) ? "0" : "";
+                formulaField.setText(formulaField.getText() + "{" + space + (RangeVar.count - 1) + "}");
+                // Очищаем поля rangeVar
+                rangeVarStart.setText("");
+                rangeVarEnd.setText("");
+                rangeVarStep.setText("");
+            }
         }
     }
 
@@ -200,6 +205,16 @@ public class FormulaForm extends JFrame {
 
     void closeForm() {
         this.setVisible(false);
+    }
+
+    boolean checkAddedListVar() {
+        // Проверка лист-переменной на корректность (лист не пустой)
+        return !listModel.isEmpty();
+    }
+
+    boolean checkAddedRangeVar() {
+        // Проверка интервал-переменной на корректность (старт, шаг и конец не пустые)
+        return !(rangeVarStart.getText().isEmpty() || rangeVarStep.getText().isEmpty() || rangeVarEnd.getText().isEmpty());
     }
 
 }

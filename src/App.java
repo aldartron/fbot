@@ -42,6 +42,8 @@ public class App {
         typeEngine.start();
     }
 
+    public void stop() { typeEngine.isAtive = false; }
+
     void showFormulaForm() {
         formulaForm.setVisible(true);
     }
@@ -60,9 +62,14 @@ public class App {
         formulaEngine.rangeVars.add(rangeVar);
     }
 
-    // Сохранение готового для ввода листа
     void saveGenList(ArrayList<String> genList) {
+        // Сохранение готового для ввода листа
         typeEngine.list = genList;
     }
+
+    void updateFormula() {
+        mainForm.updateFormula(formulaForm.formulaField.getText());
+    }
+
 
 }

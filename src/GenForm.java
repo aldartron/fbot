@@ -27,7 +27,8 @@ public class GenForm extends JFrame {
         c.gridx = 1;
         this.add(genCancelButton,c);
 
-        this.setSize(400,640);
+        this.setLocation(500,300);
+        this.setSize(360,420);
         this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 
         genOkButton.addActionListener(new GenOkListener());
@@ -52,6 +53,7 @@ public class GenForm extends JFrame {
     void genOk() {
         // Сохранить generatedList в приложении
         app.saveGenList(generatedList);
+        app.updateFormula();
         listModel.clear();
         this.setVisible(false);
     }

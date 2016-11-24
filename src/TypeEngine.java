@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.security.cert.TrustAnchor;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +12,7 @@ public class TypeEngine {
     ArrayList<String> list = new ArrayList<>();
     Color color;
     Robot robot;
+    boolean isAtive = false;
 
     int inputX, inputY, submitX, submitY;
 
@@ -33,22 +35,38 @@ public class TypeEngine {
 
     void start() {
         // Запоминаем цвет
+        robot.mouseMove(submitX,submitY);
+        robot.mouseMove(submitX+1,submitY+1);
         color = robot.getPixelColor(submitX,submitY);
 
-        for (String s : list) {
-            // Вводим одну формулу
-            fEnter(s);
-            robot.delay(7000);
-            // Ждем когда вернется цвет кнопки
-            while (true) {
-                robot.mouseMove(submitX + (int)(Math.random() * 3), submitY);
-                if (robot.getPixelColor(submitX,submitY).equals(color)) {
-                    break;
-                } else {
-                    sleep(500);
+        isAtive = true;
+
+        Thread fThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (isAtive) {
+                    for (String s : list) {
+                        // Вводим одну формулу
+                        fEnter(s);
+                        robot.delay(5000);
+                        // Ждем когда вернется цвет кнопки
+                        while (true) {
+                            if  (isAtive) {
+//                            robot.mouseMove(submitX + (int) (Math.random() * 3), submitY);
+//                            robot.delay(1500);
+                                if (robot.getPixelColor(submitX, submitY).equals(color)) {
+                                    break;
+                                } else {
+                                    sleep(500);
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
+        });
+
+        fThread.start();
     }
 
     TypeEngine() {

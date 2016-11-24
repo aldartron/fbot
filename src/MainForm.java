@@ -32,6 +32,8 @@ public class MainForm extends JFrame {
         c.gridy = 1;
         this.add(formulaPanel,c);
 
+        formulaField.setHorizontalAlignment(SwingConstants.CENTER);
+
         buttonPanel.setLayout(new GridBagLayout());
         c.gridy = 0;
         buttonPanel.add(setFormButton,c);
@@ -57,9 +59,10 @@ public class MainForm extends JFrame {
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(320,240));
+        this.setLocation(700,300);
         this.setSize(320, 240);
         this.setVisible(true);
-        this.setTitle("FBot v 0.1");
+        this.setTitle("FBot");
 
         setFormButton.setName("FormButton");
         setSubmitButton.setName("SubmitButton");
@@ -79,7 +82,7 @@ public class MainForm extends JFrame {
     class stopButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-
+            app.stop();
         }
     }
 
@@ -117,6 +120,10 @@ public class MainForm extends JFrame {
         } catch (Exception e) {
             System.err.println("Couldn't get specified look and feel, for some reason.");
         }
+    }
+
+    void updateFormula(String formula) {
+        formulaField.setText(formula);
     }
 
 }
