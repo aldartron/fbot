@@ -54,10 +54,17 @@ public class TypeEngine {
                             if  (isActive) {
 //                            robot.mouseMove(submitX + (int) (Math.random() * 3), submitY);
 //                            robot.delay(5000);
+                                robot.mouseMove(submitX, submitY);
+                                robot.delay(100);
                                 if (robot.getPixelColor(submitX, submitY).equals(color)) {
                                     break;
                                 } else {
                                     sleep(500);
+                                    robot.mouseMove(submitX, submitY + 75);
+                                    sleep(500);
+                                    if (robot.getPixelColor(submitX, submitY).equals(color)) {
+                                        break;
+                                    } else robot.delay(3500);
                                 }
                             }
                         }
