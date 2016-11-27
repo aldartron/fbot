@@ -129,7 +129,7 @@ public class TypeEngine {
     }
 
     void sleep(int max) {
-       robot.delay((int) (1 + Math.random() * max));
+       robot.delay(50 + (int) (1 + Math.random() * (max - 50)));
     }
 
     void press(char c) {
