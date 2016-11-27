@@ -28,10 +28,4 @@ public class RangeVar {
 
         count++;
     }
-
-    public static void main(String[] args) {
-        RangeVar rv = new RangeVar(2,5,0.125);
-        for (int i = 0; i < 10; i++)
-            System.out.println(rv.getValue());
-    }
 }

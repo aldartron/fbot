@@ -52,8 +52,8 @@ public class TypeEngine {
                         // Ждем когда вернется цвет кнопки
                         while (true) {
                             if  (isAtive) {
-//                            robot.mouseMove(submitX + (int) (Math.random() * 3), submitY);
-//                            robot.delay(1500);
+                            robot.mouseMove(submitX + (int) (Math.random() * 3), submitY);
+                            robot.delay(5000);
                                 if (robot.getPixelColor(submitX, submitY).equals(color)) {
                                     break;
                                 } else {
