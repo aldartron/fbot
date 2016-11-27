@@ -93,9 +93,6 @@ public class TypeEngine {
     void fEnter(String formula) {
         // Вводит текст в форму и нажимает кнопку отправки
         // Наводим на форму ввода
-        robot.mouseMove(inputX,inputY);
-        // Двойной клик для того, чтобы скрыть лист возможных формул
-        click(2);
         robot.delay(1000);
         sleep(500);
         // Тройной клик для полного выделения
@@ -112,6 +109,9 @@ public class TypeEngine {
         robot.mouseMove(inputX,inputY + 250);
         click(1);
         sleep(100);
+        // Двойной клик для того, чтобы скрыть лист возможных формул
+        robot.mouseMove(inputX,inputY);
+        click(2);
         // Кликаем на кнопку
         robot.mouseMove(submitX,submitY);
         robot.delay(3000);
