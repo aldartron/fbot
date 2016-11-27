@@ -91,6 +91,7 @@ public class TypeEngine {
     }
 
     void fEnter(String formula) {
+        robot.mouseMove(inputX,inputY);
         // Вводит текст в форму и нажимает кнопку отправки
         // Наводим на форму ввода
         robot.delay(1000);
@@ -112,6 +113,7 @@ public class TypeEngine {
         // Двойной клик для того, чтобы скрыть лист возможных формул
         robot.mouseMove(inputX,inputY);
         click(2);
+        sleep(100);
         // Кликаем на кнопку
         robot.mouseMove(submitX,submitY);
         robot.delay(3000);
