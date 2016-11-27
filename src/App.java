@@ -42,7 +42,7 @@ public class App {
         typeEngine.start();
     }
 
-    public void stop() { typeEngine.isAtive = false; }
+    public void stop() { typeEngine.isActive = false; }
 
     void showFormulaForm() {
         formulaForm.setVisible(true);

@@ -12,7 +12,7 @@ public class TypeEngine {
     ArrayList<String> list = new ArrayList<>();
     Color color;
     Robot robot;
-    boolean isAtive = false;
+    boolean isActive = false;
 
     int inputX, inputY, submitX, submitY;
 
@@ -35,23 +35,23 @@ public class TypeEngine {
 
     void start() {
         // Запоминаем цвет
-        robot.mouseMove(submitX,submitY);
-        robot.mouseMove(submitX+1,submitY+1);
+//        robot.mouseMove(submitX,submitY);
+//        robot.mouseMove(submitX+1,submitY+1);
         color = robot.getPixelColor(submitX,submitY);
 
-        isAtive = true;
+        isActive = true;
 
         Thread fThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                if (isAtive) {
+                if (isActive) {
                     for (String s : list) {
                         // Вводим одну формулу
                         fEnter(s);
                         robot.delay(5000);
                         // Ждем когда вернется цвет кнопки
                         while (true) {
-                            if  (isAtive) {
+                            if  (isActive) {
                             robot.mouseMove(submitX + (int) (Math.random() * 3), submitY);
                             robot.delay(5000);
                                 if (robot.getPixelColor(submitX, submitY).equals(color)) {
