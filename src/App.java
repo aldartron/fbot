@@ -71,5 +71,9 @@ public class App {
         mainForm.updateFormula(formulaForm.formulaField.getText());
     }
 
+    void refreshIterations(String formula) {
+        int iterations = formulaEngine.countIterations(formula);
+        formulaForm.timesField.setText(Integer.toString(iterations));
+    }
 
 }

@@ -45,4 +45,34 @@ public class FormulaEngine {
         return result;
     }
 
+    int countIterations(String formula) {
+        int result = 1;
+        int i = 0;
+        while (i < formula.toCharArray().length) {
+            char c = formula.toCharArray()[i];
+            if (c == '[') {
+                int index = Integer.parseInt(
+                        Character.toString(formula.toCharArray()[i+1])
+                                + Character.toString(formula.toCharArray()[i+2])
+                );
+                result *= listVars.get(index).values.size();
+                i += 4;
+            }  else if (c == '{') {
+                int index = Integer.parseInt(
+                        Character.toString(formula.toCharArray()[i+1])
+                                + Character.toString(formula.toCharArray()[i+2])
+                );
+                RangeVar rangeVar = rangeVars.get(index);
+
+                result *= (rangeVar.end - rangeVar.begin) / rangeVar.step;
+
+                i += 4;
+            } else {
+                i++;
+            }
+        }
+
+        return result;
+    }
+
 }

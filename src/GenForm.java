@@ -59,6 +59,7 @@ public class GenForm extends JFrame {
     }
 
     void showGeneratedList() {
+        listModel.clear();
         for (String s : generatedList) {
             listModel.addElement(s);
         }

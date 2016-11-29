@@ -21,11 +21,8 @@ public class FormulaForm extends JFrame {
     JButton genButton = new JButton("Сгенерировать");
 
     // Компоненты listVarPanel
-    JTextField listVarField = new JTextField();
-    JList listVarList = new JList();
-    JButton listVarInsertButton = new JButton("Внести");
+    JTextArea listVarArea = new JTextArea();
     JButton listVarAddButton = new JButton("Добавить список");
-    DefaultListModel<String> listModel;
 
     // Компоненты rangeVarPanel
     JTextField rangeVarStart = new JTextField("От");
@@ -55,20 +52,16 @@ public class FormulaForm extends JFrame {
         varPanel.add(rangeVarPanel);
         varPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
+        // Настройка listVarArea
+        listVarArea.setLineWrap(true);
+
         // Заполнение listVarPanel
         listVarPanel.setLayout(new GridBagLayout());
-        c.gridy = 1; c.gridx = 0; c.weightx = 10;
-        listVarPanel.add(listVarField,c);
-        c.gridx = 1; c.weightx = 1;
-        listVarPanel.add(listVarInsertButton,c);
-        c.gridx = 0; c.gridy = 0; c.gridwidth = 2; c.weighty = 7;
-        listVarPanel.add(new JScrollPane(listVarList),c);
-        c.gridy = 2; c.weighty = 1;
+        c.gridy = c.gridx = 0;
+        listVarPanel.add(new JScrollPane(listVarArea),c);
+        c.gridy = 1; c.weighty = 0.1;
         listVarPanel.add(listVarAddButton,c);
 
-        // Настройка листа
-        listModel = new DefaultListModel();
-        listVarList.setModel(listModel);
 
         // Заполнение rangeVarPanel
         rangeVarPanel.setLayout(new GridBagLayout());
@@ -104,8 +97,6 @@ public class FormulaForm extends JFrame {
         genButton.addActionListener(new GenButtonListener());
         listVarAddButton.addActionListener(new AddListVarListener());
         rangeVarAddButton.addActionListener(new AddRangeVarListener());
-        listVarInsertButton.addActionListener(new InsertListVarListener());
-        listVarList.addKeyListener(new DeleteListVarListener());
         closeButton.addActionListener(new CloseListener());
     }
 
@@ -134,14 +125,17 @@ public class FormulaForm extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if (checkAddedListVar()) {
-                ListVar listVar = new ListVar();
-                for (int i = 0; i < listModel.getSize(); i++) {
-                    listVar.values.add(listModel.get(i));
+                ListVar listVar = new ListVar(); // Создается новая лист-переменная
+                String[] list = listVarArea.getText().split(" +");
+                for (String s : list) {
+                    listVar.values.add(s);
                 }
                 app.newListVar(listVar);
                 String space = (ListVar.count < 10) ? "0" : "";
                 formulaField.setText(formulaField.getText() + "[" + space + (ListVar.count - 1) + "]");
-                listModel.clear();
+                listVarArea.setText("");
+
+                refreshIterations();
             }
         }
     }
@@ -163,36 +157,9 @@ public class FormulaForm extends JFrame {
                 rangeVarStart.setText("");
                 rangeVarEnd.setText("");
                 rangeVarStep.setText("");
+
+                refreshIterations();
             }
-        }
-    }
-
-    class InsertListVarListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-            if (!listVarField.getText().equals("")) {
-                listModel.addElement(listVarField.getText());
-                listVarField.setText("");
-                listVarField.grabFocus();
-            }
-        }
-    }
-
-    class DeleteListVarListener implements KeyListener {
-        @Override
-        public void keyPressed(KeyEvent keyEvent) {
-            if (keyEvent.getKeyCode() == KeyEvent.VK_DELETE)
-                listModel.remove(listVarList.getSelectedIndex());
-        }
-
-        @Override
-        public void keyTyped(KeyEvent keyEvent) {
-
-        }
-
-        @Override
-        public void keyReleased(KeyEvent keyEvent) {
-
         }
     }
 
@@ -208,13 +175,17 @@ public class FormulaForm extends JFrame {
     }
 
     boolean checkAddedListVar() {
-        // Проверка лист-переменной на корректность (лист не пустой)
-        return !listModel.isEmpty();
+        // Проверка лист-переменной на корректность (поле не пустое)
+        return !listVarArea.getText().isEmpty();
     }
 
     boolean checkAddedRangeVar() {
         // Проверка интервал-переменной на корректность (старт, шаг и конец не пустые)
         return !(rangeVarStart.getText().isEmpty() || rangeVarStep.getText().isEmpty() || rangeVarEnd.getText().isEmpty());
+    }
+
+    void refreshIterations() {
+        app.refreshIterations(formulaField.getText());
     }
 
 }
