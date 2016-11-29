@@ -42,7 +42,12 @@ public class App {
         typeEngine.start();
     }
 
-    public void stop() { typeEngine.isActive = false; }
+    public void stop() {
+        typeEngine.isActive = false;
+        if (typeEngine.currentIteration != 0) {
+            mainForm.startButton.setText("Продолжить");
+        }
+    }
 
     void showFormulaForm() {
         formulaForm.setVisible(true);
@@ -52,6 +57,7 @@ public class App {
         genForm.setVisible(true);
         genForm.generatedList = formulaEngine.generateFormula(formula, Integer.parseInt(formulaForm.timesField.getText()));
         genForm.showGeneratedList();
+        typeEngine.currentIteration = 0; // Начинаем итерации заново, т.к. сформирован новый лист
     }
 
     void newListVar(ListVar listVar) {
@@ -74,6 +80,10 @@ public class App {
     void refreshIterations(String formula) {
         int iterations = formulaEngine.countIterations(formula);
         formulaForm.timesField.setText(Integer.toString(iterations));
+    }
+
+    void reset() {
+        mainForm.startButton.setText("Старт");
     }
 
 }

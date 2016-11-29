@@ -118,6 +118,7 @@ public class FormulaForm extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             app.showGenForm(formulaField.getText());
+
         }
     }
 

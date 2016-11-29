@@ -13,6 +13,7 @@ public class TypeEngine {
     Color color;
     Robot robot;
     boolean isActive = false;
+    int currentIteration;
 
     int inputX, inputY, submitX, submitY;
 
@@ -45,9 +46,11 @@ public class TypeEngine {
             @Override
             public void run() {
                 if (isActive) {
-                    for (String s : list) {
+//                    for (String s : list) {
+                    for (int i = currentIteration; i < list.size(); i++) {
                         // Вводим одну формулу
-                        fEnter(s);
+                        fEnter(list.get(i));
+                        currentIteration ++;
                         robot.delay(5000);
                         // Ждем когда вернется цвет кнопки
                         while (true) {
@@ -69,6 +72,8 @@ public class TypeEngine {
                             }
                         }
                     }
+                    currentIteration = 0;
+                    app.reset();
                 }
             }
         });
