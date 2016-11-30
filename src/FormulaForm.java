@@ -1,8 +1,9 @@
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by aldartron on 21.11.16.
@@ -40,6 +41,8 @@ public class FormulaForm extends JFrame {
         this.add(mainPanel,c);
         c.gridy = 3; c.insets = new Insets(3,3,3,3);
         this.add(generalButtonsPanel,c);
+
+        timesField.setEnabled(false);
 
         generalButtonsPanel.setLayout(new GridBagLayout());
         c.gridx = 0;
@@ -117,7 +120,9 @@ public class FormulaForm extends JFrame {
     class GenButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            refreshIterations();
             app.showGenForm(formulaField.getText());
+
         }
     }
 
@@ -128,14 +133,15 @@ public class FormulaForm extends JFrame {
                 ListVar listVar = new ListVar(); // Создается новая лист-переменная
                 String[] list = listVarArea.getText().split(" +");
                 for (String s : list) {
-                    listVar.values.add(s);
+                    if (!listVar.values.contains(s)) // Проверка на уникальность
+                        listVar.values.add(s);
                 }
                 app.newListVar(listVar);
                 String space = (ListVar.count < 10) ? "0" : "";
                 formulaField.setText(formulaField.getText() + "[" + space + (ListVar.count - 1) + "]");
                 listVarArea.setText("");
 
-                refreshIterations();
+//                refreshIterations();
             }
         }
     }
@@ -158,7 +164,7 @@ public class FormulaForm extends JFrame {
                 rangeVarEnd.setText("");
                 rangeVarStep.setText("");
 
-                refreshIterations();
+//                refreshIterations();
             }
         }
     }
