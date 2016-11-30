@@ -3,6 +3,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by aldartron on 21.11.16.
@@ -129,7 +131,8 @@ public class FormulaForm extends JFrame {
                 ListVar listVar = new ListVar(); // Создается новая лист-переменная
                 String[] list = listVarArea.getText().split(" +");
                 for (String s : list) {
-                    listVar.values.add(s);
+                    if (!listVar.values.contains(s)) // Проверка на уникальность
+                        listVar.values.add(s);
                 }
                 app.newListVar(listVar);
                 String space = (ListVar.count < 10) ? "0" : "";
