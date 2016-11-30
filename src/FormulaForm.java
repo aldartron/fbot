@@ -1,6 +1,5 @@
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashSet;
@@ -42,6 +41,8 @@ public class FormulaForm extends JFrame {
         this.add(mainPanel,c);
         c.gridy = 3; c.insets = new Insets(3,3,3,3);
         this.add(generalButtonsPanel,c);
+
+        timesField.setEnabled(false);
 
         generalButtonsPanel.setLayout(new GridBagLayout());
         c.gridx = 0;
@@ -119,6 +120,7 @@ public class FormulaForm extends JFrame {
     class GenButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            refreshIterations();
             app.showGenForm(formulaField.getText());
 
         }
@@ -139,7 +141,7 @@ public class FormulaForm extends JFrame {
                 formulaField.setText(formulaField.getText() + "[" + space + (ListVar.count - 1) + "]");
                 listVarArea.setText("");
 
-                refreshIterations();
+//                refreshIterations();
             }
         }
     }
@@ -162,7 +164,7 @@ public class FormulaForm extends JFrame {
                 rangeVarEnd.setText("");
                 rangeVarStep.setText("");
 
-                refreshIterations();
+//                refreshIterations();
             }
         }
     }

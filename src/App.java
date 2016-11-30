@@ -71,6 +71,8 @@ public class App {
     void saveGenList(ArrayList<String> genList) {
         // Сохранение готового для ввода листа
         typeEngine.list = genList;
+        // Активация поля количества итераций
+        formulaForm.timesField.setEnabled(true);
     }
 
     void updateFormula() {
