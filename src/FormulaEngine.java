@@ -48,7 +48,8 @@ public class FormulaEngine {
     int countIterations(String formula) {
         int result = 1;
         int i = 0;
-        while (i < formula.toCharArray().length) {
+        System.out.println(formula);
+        while (i < formula.toCharArray().length - 3) {
             try {
                 char c = formula.toCharArray()[i]; // Открывающая скобка
                 char cc = formula.toCharArray()[i + 3]; // Закрывающая скобка
